@@ -26,12 +26,16 @@ function doTrade(item, rules) {
     if(
         (rules.Bdiff24 === false || item.change24H > rules.Bdiff24)
         && (rules.Bdiff05 === false || item.change05H > rules.Bdiff05)
+        && (rules.Bdiff1 === false || item.change1H > rules.Bdiff1)
+        && (rules.Bdiff48 === false || item.change48H > rules.Bdiff48)
     ) {
         buyBTC('ALL', item);
     }
     else if(
         (rules.Sdiff24 === false || item.change24H < rules.Sdiff24)
         && (rules.Sdiff05 === false || item.change05H < rules.Sdiff05)
+        && (rules.Sdiff1 === false || item.change1H < rules.Sdiff1)
+        && (rules.Sdiff48 === false || item.change48H < rules.Sdiff48)
     ) {
         sellBTC('ALL', item);
     }
@@ -51,8 +55,12 @@ usd = 100; btc = 0;
 timeMachine({
     Bdiff05: 0.2,
     Sdiff05: 0.4,
+    Bdiff1: 0.1,
+    Sdiff1: 0.001,
     Bdiff24: 2.9,
-    Sdiff24: 0.1
+    Sdiff24: 0.1,
+    Bdiff48: 0.5,
+    Sdiff48: 0.05
 });
 console.log('USD:', usd);
 console.log('BTC:' + btc + ' ('+ btc * data[data.length - 1].weightedAverage +' USD)');
