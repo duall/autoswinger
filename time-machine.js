@@ -9,7 +9,7 @@ let exportArray = [];
 function doTrade(item, rules) {
     var buyBTC = function() {
         if(usd) {
-            btc = usd / item.close;
+            btc = usd / item.high;
             usd = 0;
             exportArray.push({ date: item.date, type: 'buy', price: item.close, assets_in_usd: btc * item.open });
             //console.log('buy for ' + item.close);
@@ -17,21 +17,21 @@ function doTrade(item, rules) {
     }
     var sellBTC = function() {
         if(btc) {
-            usd = btc * item.open;
+            usd = btc * item.low;
             btc = 0;
             exportArray.push({ date: item.date, type: 'sell', price: item.open, assets_in_usd: usd });
             //console.log('sell for ' + item.open);
         }
     }
     if(
-        (rules.diff24 === false || item.change24H > rules.diff24)
-        && (rules.diff05 === false || item.change05H > rules.diff05)
+        (rules.Bdiff24 === false || item.change24H > rules.Bdiff24)
+        && (rules.Bdiff05 === false || item.change05H > rules.Bdiff05)
     ) {
         buyBTC('ALL', item);
     }
     else if(
-        (rules.diff24 === false || item.change24H < rules.diff24)
-        && (rules.diff05 === false || item.change05H < rules.diff05)
+        (rules.Sdiff24 === false || item.change24H < rules.Sdiff24)
+        && (rules.Sdiff05 === false || item.change05H < rules.Sdiff05)
     ) {
         sellBTC('ALL', item);
     }
@@ -41,19 +41,18 @@ function doTrade(item, rules) {
 
 function timeMachine(rules) {
     data.forEach(function(item) {
-        doTrade(item, rules);
+        //if(item.date > 1502755200) {
+            doTrade(item, rules);
+        //}
     });
 }
 
-// timeMachine({
-//     diff05: false,
-//     diff24: 0.24
-// });
-
 usd = 100; btc = 0;
 timeMachine({
-    diff05: 0,
-    diff24: false
+    Bdiff05: 0.2,
+    Sdiff05: 0.4,
+    Bdiff24: 2.9,
+    Sdiff24: 0.1
 });
 console.log('USD:', usd);
 console.log('BTC:' + btc + ' ('+ btc * data[data.length - 1].weightedAverage +' USD)');
